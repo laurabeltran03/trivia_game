@@ -1,24 +1,67 @@
-//Instrucciones Triviagame
+function populate() {
+    if(quiz.isEnded()) {
+        showScores();
+    }
+    else {
+        // show question
+        var element = document.getElementById("question");
+        element.innerHTML = quiz.getQuestionIndex().text;
 
-//Preguntas Random que queremos preguntar, así  como sus distintas opciones de respuesta.
+        // show options
+        var choices = quiz.getQuestionIndex().choices;
+        for(var i = 0; i < choices.length; i++) {
+            var element = document.getElementById("choice" + i);
+            element.innerHTML = choices[i];
+            guess("btn" + i, choices[i]);
+        }
 
-var question = ["What is the name of the third Harry Potter book?", "What is the last name of Harry Potter's uncles?", 
-"What is the name of the four houses of Hogwarts?", "What animal is not permitted for the students in Howarts?"];
+        showProgress();
+    }
+};
 
-var answer = ["Harry Potter and the Prisoner of Azkaban", "Dursley", "Hufflepuff,Ravenclaw,Gryffindor,Slytherin","dog"];
+function guess(id, guess) {
+    var button = document.getElementById(id);
+    button.onclick = function() {
+        quiz.guess(guess);
+        populate();
+    }
+};
 
-var firstAnswerGroup = ["Harry Potter and the Prisoner of Azkaban", "Harry Potter and the Chamber of Secrets","Harry Potter and the Goblet of Fire","Harry Potter and the Half-Blood Prince"];
-var secondAnswerGroup = ["Weasley", "Dursley", "Granger", "Longbottom"];
-var thirdAnswerGroup = ["Hufflepuff,Ravenclaw,Gryffindor,Longbottom","Hufflepuff,Ravenclaw,CrossRoad,Slytherin","Hufflepuff,Ravenclaw,Gryffindor,Slytherin","Hufflepuff,Toadclaw,Gryffindor,Slytherin"];
-var fourthAnswerGroup = ["dog", "cat", "rat", "owl"]
 
-//Mostrar el tiempo que se tiene para contestar cada pregunta (15seg)
+function showProgress() {
+    var currentQuestionNumber = quiz.questionIndex + 1;
+    var element = document.getElementById("progress");
+    element.innerHTML = "Question " + currentQuestionNumber + " of " + quiz.questions.length;
+};
 
-//Si la respuesta que selecciono es correcta, te debe mostrar respuesta correcta, en otra pagina y los segundos restantes
+function showScores() {
+    var gameOverHTML = "<h1>Result</h1>";
+    gameOverHTML += "<h2 id='score'> Your scores: " + quiz.score + "</h2>";
+    var element = document.getElementById("quiz");
+    element.innerHTML = gameOverHTML;
+};
 
-//Si la respuesta es incorrecta, te debe mostrar respuesta incorrecta y la solución correcta, además de los segundos restantes.
+// create questions
+var questions = [
+new Question ("One early type of bicycle was known for its huge front wheel. What was this vehicle called?", ["An ordinary bicycle",
+     "A ten-speed bicycle", "A mountain bicycle", "A touring bicycle"], "An ordinary bicycle"),
+new Question ("What other invention of the late 1880s greatly enhanced bicycle safety?", ["Glow-in-the-dark clothing",
+     "Hand brakes", "Chain locks", "Battery-powered lights"], "Battery-powered lights"),
+new Question ("What was the distinguishing feature of the Otto Dicycle, produced in the late 1800s?", ["It had very small tires for speed",
+    "The bicycle could be taken apart and stored in a backpack", "It had a basket in back", "The seat was located between the two wheels"], "The seat was located between the two wheels"),
+new Question ("What company manufactured the Radio Bicycle, which included a radio built into the frame?", ["Schwinn",
+"Huffy", "Iron Horse", "Mongoose"], "Huffy"),
+new Question ("The German-made Draisienne bicycle was made out of what material?", ["Metal",
+"Wood", "Plastic", "Rubber"], "Wood"),
+];
 
-//Cuando llegues al final de la trivia, te debe mostrar respuestas correctas, incorrectas y sin responder. Además de Start Over?
+// create quiz
+var quiz = new Quiz(questions);
+
+// display quiz
+populate();
+
+
 
 
 
